@@ -6,15 +6,24 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.alinge.market.R;
 import com.alinge.market.common.log.Log;
-import com.alinge.market.home.convert.JSONObjectConvertFactory;
-import com.alinge.market.home.entity.HomeEntity;
-import com.alinge.market.http.ApiService;
-import com.alinge.market.http.NetUtils;
+import com.alinge.market.http.api.ApiService;
+import com.alinge.market.http.interceptor.RequestInterceptor;
+import com.alinge.market.http.tools.NetUtils;
+import com.alinge.market.update.UpdateListEntity;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.Response;
-import retrofit.Retrofit;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 /**
  * Project Name:   AppMarket
@@ -27,12 +36,18 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_layout);
-
-
+        OkHttpClient.Builder builder= new OkHttpClient.Builder();
+        builder.connectTimeout(5000, TimeUnit.MILLISECONDS);
+        builder.addInterceptor(new RequestInterceptor());
+       // builder.addNetworkInterceptor(new RequestInterceptor());
+        File file=new File(getExternalCacheDir(),"response_cache");
+        Cache cache=new Cache(file,1024*10*1024);
+        builder.cache(cache);
+        OkHttpClient client = builder.build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(JSONObjectConvertFactory.create())
-
+                .addConverterFactory(GsonConverterFactory.create())
+               .client(client)
                 .baseUrl(NetUtils.HOST)
                 .build();
 
@@ -42,23 +57,27 @@ public class HomeActivity extends AppCompatActivity {
         String count = NetUtils.ITEM_COUNT;
         String machineName = NetUtils.getMachineType();
         String bannerCount = NetUtils.BANNER_COUNT;
-        Log.info("token:"+token+"  productId:"+productId+"  count:"+count+" machineName"+machineName+" bannerCount"+bannerCount);
+        Map<String,Object> options=new HashMap<>();
+        options.put("token",token);
+        options.put("productId",productId);
+        options.put("machineName",machineName);
+        //Log.info("token:"+token+"  productId:"+productId+"  count:"+count+"  machineName:"+machineName+"  bannerCount"+bannerCount);
+       //Call<HomeEntity> call = service.getHome(token, productId, bannerCount, count, machineName);
+       //Call<BrandEntity> call= service.getBrand(token);
+        Call<UpdateListEntity> call = service.getUpdateList(options);
 
-        Call<HomeEntity> call = service.getHome(token, productId, bannerCount, count, machineName);
-       // Call<BrandEntity>  call= service.getBrand(token);
 
-        call.enqueue(new Callback<HomeEntity>() {
-            @Override
-            public void onResponse(Response<HomeEntity> response, Retrofit retrofit) {
-                Log.info("url", response.raw().request().url().toString());
-                Log.info("response", response.body().getResult().getReturnMessage());
-            }
+       call.enqueue(new Callback<UpdateListEntity>() {
+          @Override
+          public void onResponse(Call<UpdateListEntity> call, Response<UpdateListEntity> response) {
+              Log.info("response", response.body().getResult().getReturnMessage());
+          }
 
-            @Override
-            public void onFailure(Throwable throwable) {
-                Log.warn(throwable.getMessage()+"cause:"+throwable.getCause());
-            }
-        });
+          @Override
+          public void onFailure(Call<UpdateListEntity> call, Throwable throwable) {
+              Log.error("message:"+throwable.getMessage()+"  cause:"+throwable.getCause());
+          }
+      });
 
 
     }

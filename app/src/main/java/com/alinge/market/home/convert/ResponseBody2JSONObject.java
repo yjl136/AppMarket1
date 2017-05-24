@@ -1,14 +1,15 @@
 package com.alinge.market.home.convert;
 
 import com.alinge.market.common.log.Log;
-import com.squareup.okhttp.ResponseBody;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 
-import retrofit.Converter;
+import okhttp3.ResponseBody;
+import retrofit2.Converter;
+
 
 /**
  * Project Name:   AppMarket

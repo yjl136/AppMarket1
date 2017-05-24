@@ -1,12 +1,5 @@
 package com.alinge.market.home.convert;
-
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.ResponseBody;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-
-import retrofit.Converter;
+import retrofit2.Converter;
 
 /**
  * Project Name:   AppMarket
@@ -22,13 +15,5 @@ public class JSONObjectConvertFactory extends Converter.Factory {
         super();
     }
 
-    @Override
-    public Converter<ResponseBody, ?> fromResponseBody(Type type, Annotation[] annotations) {
-        return new ResponseBody2JSONObject();
-    }
 
-    @Override
-    public Converter<?, RequestBody> toRequestBody(Type type, Annotation[] annotations) {
-        return super.toRequestBody(type, annotations);
-    }
 }

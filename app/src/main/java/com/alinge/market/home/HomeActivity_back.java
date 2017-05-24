@@ -18,16 +18,8 @@ import android.widget.Toast;
 
 import com.alinge.market.R;
 import com.alinge.market.common.log.Log;
-import com.alinge.market.home.entity.HomeEntity;
-import com.alinge.market.http.ApiService;
-import com.alinge.market.http.NetUtils;
 import com.alinge.market.service.TestService;
 
-import retrofit.Call;
-import retrofit.Callback;
-import retrofit.GsonConverterFactory;
-import retrofit.Response;
-import retrofit.Retrofit;
 
 /**
  * Project Name:   AppMarket
@@ -115,35 +107,7 @@ public class HomeActivity_back extends AppCompatActivity{
         super.onDestroy();
     }
 
-    private void todo() {
-    /* Retrofit retrofit = new Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-             .baseUrl(NetUtils.HOST)
-             .build();*/
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                 .baseUrl(NetUtils.HOST)
-                 .build();
-        ApiService service = retrofit.create(ApiService.class);
-        String token=NetUtils.getAppKey(this);
-        String productId=NetUtils.PRODUCT_ID;
-        String count=NetUtils.ITEM_COUNT;
-        String machineName =NetUtils.getMachineType();
-        String bannerCount=NetUtils.BANNER_COUNT;
-        Call<HomeEntity> call = service.getHome(token,productId,bannerCount,count,machineName);
 
-        call.enqueue(new Callback<HomeEntity>() {
-            @Override
-            public void onResponse(Response<HomeEntity> response, Retrofit retrofit) {
-                Log.info("url",response.raw().request().url().toString());
-                Log.info("response",response.body().getResult().getReturnCode());
-            }
-            @Override
-            public void onFailure(Throwable throwable) {
-                Log.warn(throwable.getMessage());
-            }
-        });
-    }
 
 
 }

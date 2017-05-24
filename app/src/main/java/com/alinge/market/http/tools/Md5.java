@@ -1,4 +1,4 @@
-package com.alinge.market.http;
+package com.alinge.market.http.tools;
 
 import java.security.MessageDigest;
 

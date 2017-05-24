@@ -1,4 +1,4 @@
-package com.alinge.market.http;
+package com.alinge.market.http.tools;
 
 import android.content.Context;
 import android.net.wifi.WifiManager;
@@ -35,7 +35,7 @@ public class NetUtils {
     public static String getAppKey(Context context) {
         String clientKey=getDeviceInfo(context);
         String serKey=CLIENT_FIX_KEY;
-        String  firstKey=Md5.stringToMd5(Md5.stringToMd5(serKey+"-"+clientKey));
+        String  firstKey= Md5.stringToMd5(Md5.stringToMd5(serKey+"-"+clientKey));
         String lastKey=Md5.stringToMd5(serKey+"-"+firstKey);
         return clientKey+"-"+lastKey;
     }

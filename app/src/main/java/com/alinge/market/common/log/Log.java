@@ -21,6 +21,7 @@ public class Log {
             }
         }
     }
+
     public static void info(String prefix,String msg){
         if(isDebug){
             if(TextUtils.isEmpty(prefix)){

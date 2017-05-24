@@ -1,6 +1,5 @@
 package com.alinge.market.brand.entity;
-
-
+import com.alinge.market.common.entity.ResultEntity;
 import java.util.List;
 
 /**

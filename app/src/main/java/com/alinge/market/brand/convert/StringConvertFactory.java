@@ -1,13 +1,6 @@
 package com.alinge.market.brand.convert;
 
-import com.alinge.market.common.log.Log;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.ResponseBody;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-
-import retrofit.Converter;
+import retrofit2.Converter;
 
 /**
  * Project Name:   AppMarket
@@ -23,16 +16,5 @@ public class StringConvertFactory  extends Converter.Factory {
         super();
     }
 
-    @Override
-    public Converter<ResponseBody, String> fromResponseBody(Type type, Annotation[] annotations) {
-
-        Log.info(type.toString());
-        return new ResponseBody2String();
-    }
-
-    @Override
-    public Converter<?, RequestBody> toRequestBody(Type type, Annotation[] annotations) {
-        return super.toRequestBody(type, annotations);
-    }
 
 }
