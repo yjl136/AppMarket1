@@ -39,10 +39,7 @@ public class BrandEntity {
 
     @Override
     public String toString() {
-        Result.toString();
-        for(BrandItemEntity item:List){
-            item.toString();
-        }
+
         return super.toString();
     }
 }

@@ -80,9 +80,9 @@ public class BrandItemEntity {
     public String toString() {
 
         return "BrandImg :"+BrandImg
-                +"BrandImgForList :"+BrandImgForList
-                +"IsDisplay :"+IsDisplay
-                +"Sort :"+Sort;
+                +"   BrandImgForList :"+BrandImgForList
+                +"   IsDisplay :"+IsDisplay
+                +"   Sort :"+Sort;
 
     }
 }

@@ -18,10 +18,6 @@ public class LogInterceptor  implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         //获取请求request
         Request request=chain.request();
-        Request.Builder builder=request.newBuilder();
-        builder.addHeader("AppKey","android@test");
-        builder.addHeader("User-Agent","android");
-        request = builder.build();
         String url = request.url().toString();
         Log.info("LogInterceptor request url:"+url);
         Response response = chain.proceed(request);

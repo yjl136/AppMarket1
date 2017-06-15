@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">AppMarket</string>
+    <string name="version">版本号：%1$s</string>
+    <string name="developer">开发商：%1$s</string>
+    <string name="filesize">文件大小：%1$s</string>
+    <string name="appname">应用名字：%1$s</string>
 </resources>

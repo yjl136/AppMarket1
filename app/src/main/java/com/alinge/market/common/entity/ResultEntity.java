@@ -13,14 +13,14 @@ public class ResultEntity {
      * ReturnMessage : 返回消息
      */
 
-    private String ReturnCode;
+    private double ReturnCode;
     private String ReturnMessage;
 
-    public String getReturnCode() {
+    public double getReturnCode() {
         return ReturnCode;
     }
 
-    public void setReturnCode(String ReturnCode) {
+    public void setReturnCode(double ReturnCode) {
         this.ReturnCode = ReturnCode;
     }
 

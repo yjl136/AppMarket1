@@ -1,9 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.alinge.market">
+    <uses-sdk
+        android:minSdkVersion="9"
+        />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -18,13 +20,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".home.HomeActivity">
+        <activity android:name=".download.DownLoadManagerActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".brand.SoftwareListActivity"/>
+      <!--  <activity android:name=".download.DownLoadManagerActivity"/>-->
         <service android:name=".service.TestService" android:exported="false"/>
+
+        <meta-data  android:name="com.alinge.market.http.cache.MarketGlideModule"
+            android:value="GlideModule"
+            />
     </application>
 
 

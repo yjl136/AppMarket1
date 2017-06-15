@@ -1,28 +1,28 @@
 package com.alinge.market.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.alinge.market.R;
+import com.alinge.market.brand.SoftwareListActivity;
+import com.alinge.market.brand.entity.BrandEntity;
 import com.alinge.market.common.log.Log;
-import com.alinge.market.http.api.ApiService;
-import com.alinge.market.http.interceptor.RequestInterceptor;
-import com.alinge.market.http.tools.NetUtils;
-import com.alinge.market.update.UpdateListEntity;
+import com.alinge.market.home.view.HomeAdapter;
+import com.alinge.market.home.view.HomeItemDecoration;
+import com.alinge.market.http.Api;
+import com.alinge.market.view.ItemListener;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.Cache;
-import okhttp3.OkHttpClient;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -31,54 +31,58 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Create Time:    2017-02-28 10:14
  * Describe:
  */
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements ItemListener.ItemClickListener {
+    @BindView(R.id.rv)
+    RecyclerView mRecyclerView;
+    private HomeAdapter adapter;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_layout);
-        OkHttpClient.Builder builder= new OkHttpClient.Builder();
-        builder.connectTimeout(5000, TimeUnit.MILLISECONDS);
-        builder.addInterceptor(new RequestInterceptor());
-       // builder.addNetworkInterceptor(new RequestInterceptor());
-        File file=new File(getExternalCacheDir(),"response_cache");
-        Cache cache=new Cache(file,1024*10*1024);
-        builder.cache(cache);
-        OkHttpClient client = builder.build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-               .client(client)
-                .baseUrl(NetUtils.HOST)
-                .build();
-
-        ApiService service = retrofit.create(ApiService.class);
-        String token = NetUtils.getAppKey(this);
-        String productId = NetUtils.PRODUCT_ID;
-        String count = NetUtils.ITEM_COUNT;
-        String machineName = NetUtils.getMachineType();
-        String bannerCount = NetUtils.BANNER_COUNT;
-        Map<String,Object> options=new HashMap<>();
-        options.put("token",token);
-        options.put("productId",productId);
-        options.put("machineName",machineName);
-        //Log.info("token:"+token+"  productId:"+productId+"  count:"+count+"  machineName:"+machineName+"  bannerCount"+bannerCount);
-       //Call<HomeEntity> call = service.getHome(token, productId, bannerCount, count, machineName);
-       //Call<BrandEntity> call= service.getBrand(token);
-        Call<UpdateListEntity> call = service.getUpdateList(options);
-
-
-       call.enqueue(new Callback<UpdateListEntity>() {
-          @Override
-          public void onResponse(Call<UpdateListEntity> call, Response<UpdateListEntity> response) {
-              Log.info("response", response.body().getResult().getReturnMessage());
-          }
-
-          @Override
-          public void onFailure(Call<UpdateListEntity> call, Throwable throwable) {
-              Log.error("message:"+throwable.getMessage()+"  cause:"+throwable.getCause());
-          }
-      });
-
-
+        ButterKnife.bind(this);
+        initView();
+        Call<BrandEntity> call = Api.getBrand(this);
+        call.enqueue(new Callback<BrandEntity>() {
+            @Override
+            public void onResponse(Call<BrandEntity> call, Response<BrandEntity> response) {
+                Log.info("response", response.body().getResult().getReturnMessage());
+                adapter.setLists(response.body().getList());
+            }
+            @Override
+            public void onFailure(Call<BrandEntity> call, Throwable throwable) {
+                Log.error("message:" + throwable.getMessage() + "  cause:" + throwable.getCause());
+            }
+        });
     }
+
+    /**
+     * 初始化view，并设置item监听
+     */
+    private void initView() {
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new HomeAdapter(this);
+        mRecyclerView.addItemDecoration(new HomeItemDecoration(adapter));
+
+        mRecyclerView.setAdapter(adapter);
+        ItemListener listener = new ItemListener(mRecyclerView);
+        listener.setItemClickListener(this);
+        mRecyclerView.addOnItemTouchListener(listener);
+    }
+
+    @Override
+    public void onItemClick(ViewGroup parent, View child, int postion) {
+        Log.info("positon:"+postion);
+        int id=adapter.getBrandID(postion);
+        String brandImg=adapter.getBrandImg(postion);
+        Intent intent=new Intent(this, SoftwareListActivity.class);
+        if(id != adapter.NOVALID_POSITION){
+            intent.putExtra("brandID",id);
+        }
+        intent.putExtra("brandImg",brandImg);
+        startActivity(intent);
+        overridePendingTransition(R.anim.enter_anim,R.anim.out_anim);
+    }
+
 }

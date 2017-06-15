@@ -2,17 +2,17 @@ package com.alinge.market.http.api;
 
 
 import com.alinge.market.brand.entity.BrandEntity;
+import com.alinge.market.common.entity.SoftwareListEntity;
 import com.alinge.market.home.entity.HomeEntity;
-import com.alinge.market.update.UpdateListEntity;
 
 import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
-import retrofit2.http.Headers;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
+import rx.Observable;
 
 
 /**
@@ -24,15 +24,19 @@ import retrofit2.http.QueryMap;
 public interface ApiService {
 
     @GET("API/Market/MarketIndex")
-    Call<HomeEntity> getHome(@Query("token") String token, @Query("productId") String productId, @Query("bannerCount") String bannerCount, @Query("count") String count, @Query("machineName") String machineName);
-
+    Call<HomeEntity> getHome(@Query("token") String token,@Query("productId") String productId, @Query("bannerCount") String bannerCount, @Query("count") String count, @Query("machineName") String machineName);
 
     @GET("API/Market/GetBrand")
     Call<BrandEntity> getBrand(@Query("token") String token);
 
-    @Headers("Cache-Control: public, max-age=3600")
     @HTTP(method = "GET", path = "API/Market/UpdateList", hasBody = false)
-    Call<UpdateListEntity> getUpdateList(@QueryMap Map<String,Object> option);
+    Call<SoftwareListEntity> getUpdateList(@QueryMap Map<String,Object> option);
+
+  /*  @HTTP(method = "GET", path = "API/Market/GetSoftListByBrand", hasBody = false)
+    Call<SoftwareListEntity> getSoftListByBrand(@QueryMap Map<String,Object> option);*/
+    @HTTP(method = "GET", path = "API/Market/GetSoftListByBrand", hasBody = false)
+    Observable<SoftwareListEntity> getSoftListByBrand(@QueryMap Map<String,Object> option);
+
 
 
 

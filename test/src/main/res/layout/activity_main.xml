@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.alinge.test.DragLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.alinge.test.MainActivity">
+    />
+
+
+    <LinearLayout
+        android:id="@+id/topLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/bottom"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@android:color/holo_red_dark"
+            android:gravity="center"
+            android:text="下拉刷新" />
+
+        <com.alinge.test.MyScrollView
+            android:id="@+id/top"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/holo_blue_dark">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item1" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item2" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item3" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item4" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item5" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item3" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item4" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item5" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item3" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item4" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item5" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item3" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item4" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item5" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item3" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item4" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item5" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item3" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item4" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:background="@android:color/holo_green_light"
+                    android:gravity="center"
+                    android:text="item5" />
+
+            </LinearLayout>
+        </com.alinge.test.MyScrollView>
+
+    </LinearLayout>
+</com.alinge.test.DragLayout>

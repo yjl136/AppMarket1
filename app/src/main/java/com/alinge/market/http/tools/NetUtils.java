@@ -17,11 +17,7 @@ import java.lang.reflect.Method;
 public class NetUtils {
 
     public final static String CLIENT_FIX_KEY = "E7C3F81E00E3904B24586B037EAAE1C0";
-    public final static String PRODUCT_ID = "3";
-    public final static String ITEM_COUNT = "15";
-    public final static String BANNER_COUNT = "6";
-    public final static String HOST = "http://market.kyd2002.cn/";
-    public final static String QUALITY_MAIN_URI = "API/Market/MarketIndex";
+
     /**
      * <p/>
      *     密钥组成 var serKey=”E7C3F81E00E3904B24586B037EAAE1C0”，【固定值】;

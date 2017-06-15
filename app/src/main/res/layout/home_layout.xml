@@ -2,12 +2,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<TextView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="retrofit2.0 or okhttp"
-    android:layout_centerInParent="true"
-    android:textColor="@android:color/holo_red_light"
-    android:textSize="20dp"
-    />
+
+    <com.alinge.market.common.view.PullLayout
+        android:id="@+id/pullLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/loadTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="下拉加载..."
+        android:gravity="center_horizontal"
+        />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:scrollbars="vertical" />
+    </com.alinge.market.common.view.PullLayout>
 </RelativeLayout>
