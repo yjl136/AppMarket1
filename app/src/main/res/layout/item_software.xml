@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="60dp">
 
@@ -45,13 +46,18 @@
             android:text="@string/version"
             android:textSize="8dp" />
     </LinearLayout>
-    <Button
+    <com.alinge.market.common.view.DownloadButton
         android:id="@+id/downloadBt"
-        android:layout_width="50dp"
-        android:layout_height="35dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:text="下载"
-        android:textSize="8dp" />
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:textSize="14dp"
+        app:backgroud_color="@color/colorPrimary"
+        app:backgroud_second_color="#fff"
+        app:backgroud_strokeWidth="2dp"
+        app:radius="15"
+        app:text_color="@color/colorPrimary"
+        app:text_covercolor="#fff"/>
 
 </RelativeLayout>

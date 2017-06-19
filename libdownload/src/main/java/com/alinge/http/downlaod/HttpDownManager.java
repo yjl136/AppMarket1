@@ -1,6 +1,9 @@
 package com.alinge.http.downlaod;
 
 
+import android.os.Environment;
+import android.text.TextUtils;
+
 import com.alinge.http.downlaod.DownLoadListener.DownloadInterceptor;
 import com.alinge.http.exception.HttpTimeException;
 import com.alinge.http.exception.RetryWhenNetworkException;
@@ -12,8 +15,7 @@ import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -31,15 +33,15 @@ import rx.schedulers.Schedulers;
  */
 public class HttpDownManager {
     /*记录下载数据*/
-    private Set<DownInfo> downInfos;
-    /*回调sub队列*/
+    private HashMap<String,DownInfo>  downInfos;
     private HashMap<String,ProgressDownSubscriber> subMap;
+
     /*单利对象*/
     private volatile static HttpDownManager INSTANCE;
 
     private HttpDownManager(){
-        downInfos=new HashSet<>();
-        subMap=new HashMap<>();
+        downInfos=new HashMap<>();
+        subMap = new HashMap<>();
     }
 
     /**
@@ -56,25 +58,28 @@ public class HttpDownManager {
         }
         return INSTANCE;
     }
-
+    public void startDown(String url){
+        startDown(url,Environment.getExternalStorageDirectory().getAbsolutePath());
+    }
 
     /**
      * 开始下载
      */
-    public void startDown(final DownInfo info){
-        /*正在下载不处理*/
-        if(info==null||subMap.get(info.getUrl())!=null){
-            return;
-        }
-        /*添加回调处理类*/
-        ProgressDownSubscriber subscriber=new ProgressDownSubscriber(info);
-        /*记录回调sub*/
-        subMap.put(info.getUrl(),subscriber);
-        /*获取service，多次请求公用一个sercie*/
+    public void startDown(String url,String path){
+        DownInfo info = null;
         HttpService httpService;
-        if(downInfos.contains(info)){
-            httpService=info.getService();
+        ProgressDownSubscriber subscriber;
+        if(TextUtils.isEmpty(url)){
+            throw new IllegalArgumentException("url==null");
+        }
+        if(downInfos.get(url)!= null){
+             info = downInfos.get(url);
+             subscriber=new ProgressDownSubscriber(info);
+             httpService = info.getService();
         }else{
+            info = new DownInfo(url);
+            info.setSavePath(path);
+            subscriber=new ProgressDownSubscriber(info);
             DownloadInterceptor interceptor = new DownloadInterceptor(subscriber);
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
             //手动创建一个OkHttpClient并设置超时时间
@@ -90,6 +95,8 @@ public class HttpDownManager {
             httpService= retrofit.create(HttpService.class);
             info.setService(httpService);
         }
+        downInfos.put(info.getUrl(),info);
+        subMap.put(info.getUrl(),subscriber);
         /*得到rx对象-上一次下載的位置開始下載*/
         httpService.download("bytes=" + info.getReadLength() + "-",info.getUrl())
                 /*指定线程*/
@@ -98,18 +105,7 @@ public class HttpDownManager {
                    /*失败后的retry配置*/
                 .retryWhen(new RetryWhenNetworkException())
                 /*读取下载写入文件*/
-                .map(new Func1<ResponseBody, DownInfo>() {
-                    @Override
-                    public DownInfo call(ResponseBody responseBody) {
-                        try {
-                            writeCache(responseBody,new File(info.getSavePath()),info);
-                        } catch (IOException e) {
-                            /*失败抛出异常*/
-                            throw new HttpTimeException(e.getMessage());
-                        }
-                        return info;
-                    }
-                })
+                .map(new Func(info))
                 /*回调线程*/
                 .observeOn(AndroidSchedulers.mainThread())
                 /*数据回调*/
@@ -121,8 +117,9 @@ public class HttpDownManager {
     /**
      * 停止下载
      */
-    public void stopDown(DownInfo info){
-        if(info==null)return;
+    public void stopDown(String url){
+        if(url==null || downInfos.get(url)==null)return;
+        DownInfo info = downInfos.get(url);
         info.setState(DownState.STOP);
         info.getListener().onStop();
         if(subMap.containsKey(info.getUrl())) {
@@ -136,20 +133,21 @@ public class HttpDownManager {
 
     /**
      * 删除
-     * @param info
+     * @param url
      */
-    public void deleteDown(DownInfo info){
-        stopDown(info);
+    public void deleteDown(String url){
+        stopDown(url);
          /*删除数据库信息和本地文件*/
     }
 
 
     /**
      * 暂停下载
-     * @param info
+     * @param url
      */
-    public void pause(DownInfo info){
-        if(info==null)return;
+    public void pause(String url){
+        if(url==null || downInfos.get(url)==null)return;
+        DownInfo info = downInfos.get(url);
         info.setState(DownState.PAUSE);
         info.getListener().onPuase();
         if(subMap.containsKey(info.getUrl())){
@@ -164,8 +162,8 @@ public class HttpDownManager {
      * 停止全部下载
      */
     public void stopAllDown(){
-        for (DownInfo downInfo : downInfos) {
-            stopDown(downInfo);
+        for (DownInfo downInfo : downInfos.values()) {
+            stopDown(downInfo.getUrl());
         }
         subMap.clear();
         downInfos.clear();
@@ -175,8 +173,8 @@ public class HttpDownManager {
      * 暂停全部下载
      */
     public void pauseAll(){
-        for (DownInfo downInfo : downInfos) {
-            pause(downInfo);
+        for (DownInfo downInfo : downInfos.values()) {
+            pause(downInfo.getUrl());
         }
         subMap.clear();
         downInfos.clear();
@@ -187,7 +185,7 @@ public class HttpDownManager {
      * 返回全部正在下载的数据
      * @return
      */
-    public Set<DownInfo> getDownInfos() {
+    public Map<String, DownInfo> getDownInfos() {
         return downInfos;
     }
 
@@ -228,5 +226,21 @@ public class HttpDownManager {
                     randomAccessFile.close();
                 }
     }
+private class Func implements Func1<ResponseBody, DownInfo>{
+    private DownInfo info;
+    public Func(DownInfo info){
+        this.info = info;
+    }
 
+    @Override
+    public DownInfo call(ResponseBody responseBody) {
+        try {
+            writeCache(responseBody,new File(info.getSavePath()),info);
+        } catch (IOException e) {
+                            /*失败抛出异常*/
+            throw new HttpTimeException(e.getMessage());
+        }
+        return info;
+    }
+}
 }

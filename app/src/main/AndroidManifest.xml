@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".download.DownLoadManagerActivity">
+        <activity android:name=".home.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -28,7 +28,7 @@
         </activity>
 
         <activity android:name=".brand.SoftwareListActivity"/>
-      <!--  <activity android:name=".download.DownLoadManagerActivity"/>-->
+      <activity android:name=".download.DownLoadManagerActivity"/>
         <service android:name=".service.TestService" android:exported="false"/>
 
         <meta-data  android:name="com.alinge.market.http.cache.MarketGlideModule"

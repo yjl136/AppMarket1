@@ -1,9 +1,6 @@
 package com.alinge.http.downlaod;
-
-
 import com.alinge.http.http.HttpService;
 import com.alinge.http.listener.HttpProgressOnNextListener;
-
 /**
  * apk下载请求数据基础类
  * Created by WZG on 2016/10/20.

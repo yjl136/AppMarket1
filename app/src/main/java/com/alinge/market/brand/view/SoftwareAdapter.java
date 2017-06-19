@@ -13,10 +13,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alinge.http.downlaod.HttpDownManager;
 import com.alinge.market.R;
 import com.alinge.market.common.entity.AppEntity;
 import com.alinge.market.common.entity.SoftwareListEntity;
 import com.alinge.market.common.log.Log;
+import com.alinge.market.common.view.DownloadButton;
 import com.alinge.market.http.Api;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -64,6 +66,7 @@ public class SoftwareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private double totalCount;
     private boolean isComplete = true;
     private int state;
+    private HttpDownManager mDownManager;
 
     public SoftwareAdapter(Context context, int brandId) {
         this(context, 10, brandId);
@@ -77,6 +80,7 @@ public class SoftwareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.pageIndex = 1;
         this.res = context.getResources();
         this.pageSize = pageSize;
+        this.mDownManager = HttpDownManager.getInstance();
     }
 
     public void setPageSize(int pageSize) {
@@ -182,6 +186,7 @@ public class SoftwareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             vh.appnameTv.setText(text(R.string.appname, app.getSoftwareName()));
             vh.versionTv.setText(text(R.string.version, app.getVersion()));
             vh.filesizeTv.setText(text(R.string.filesize, app.getFileSize()));
+            vh.downloadBt.setOnDownLoadClickListener(new DownLoadLinstener(app));
         } else if (viewType == ITEM_TYPE_HEADER) {
             HeaderViewHolder vh = (HeaderViewHolder) holder;
             Glide.with(context)
@@ -279,6 +284,8 @@ public class SoftwareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public TextView versionTv;
         @BindView(R.id.filesizeTv)
         public TextView filesizeTv;
+        @BindView(R.id.downloadBt)
+        public DownloadButton downloadBt;
 
         public ContentViewHolder(View itemView) {
             super(itemView);
@@ -329,4 +336,32 @@ public class SoftwareAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         state = STATE_LOADING;
         loadData(pageIndex, brandId);
     }
+    private  class DownLoadLinstener implements DownloadButton.OnDownLoadClickListener{
+        private AppEntity entity;
+        public DownLoadLinstener(AppEntity entity) {
+            this.entity = entity;
+        }
+
+        @Override
+        public void clickDownload() {
+            mDownManager.startDown(entity.getDownUrl(),context.getExternalCacheDir()+"/apks");
+        }
+
+        @Override
+        public void clickPause() {
+         mDownManager.stopDown(entity.getDownUrl());
+        }
+
+        @Override
+        public void clickResume() {
+
+        }
+
+        @Override
+        public void clickFinish() {
+
+        }
+    }
+
+
 }

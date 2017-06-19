@@ -7,11 +7,15 @@ import com.alinge.market.home.entity.HomeEntity;
 
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
+import retrofit2.http.Header;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
+import retrofit2.http.Streaming;
+import retrofit2.http.Url;
 import rx.Observable;
 
 
@@ -37,7 +41,10 @@ public interface ApiService {
     @HTTP(method = "GET", path = "API/Market/GetSoftListByBrand", hasBody = false)
     Observable<SoftwareListEntity> getSoftListByBrand(@QueryMap Map<String,Object> option);
 
-
+    /*断点续传下载接口*/
+    @Streaming/*大文件需要加入这个判断，防止下载过程中写入到内存中*/
+    @GET
+    Observable<ResponseBody> download(@Header("RANGE") String start, @Url String url);
 
 
 
